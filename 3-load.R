@@ -18,3 +18,14 @@ if(T) for( i in c( 'acct', 'acct_site_lic', 'addr', 'busact', 'inspect', 'inspec
   cat( 'loaded', i, '\n')
   rm(idt,i)
 }
+
+
+dbWriteTable(
+  conn,
+  name='crmdist', 
+  value = xw,
+  overwrite = TRUE,
+  row.names = FALSE
+)
+
+crm %<>% mutate( crm_lat_round4 = round( lat, 4), crm_lng_round4 = round( lng, 4) ) %>% select( -lat, -lng )

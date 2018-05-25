@@ -88,6 +88,38 @@ if( length( list.files( pattern = fname) ) > 0 ){ load(fname) } else {
             funs(mdy)
         ) %>% 
         select( fname, lname, legalnm, cert, renew, expir )
+    
+    crm %<>% select( 
+      -`Updated On`, -Beat, -District, - Ward, -`Community Area`, -Year, 
+      -Location, -Block, -IUCR, -`X Coordinate`, -`Y Coordinate`, -ID, -`FBI Code` 
+    )
+    
+    crm %<>% rename(
+      casenum = `Case Number`,
+      date = Date,
+      type = `Primary Type`,
+      desc = Description,
+      loc = `Location Description`,
+      arrest = Arrest,
+      domestic = Domestic,
+      lat = Latitude,
+      lng = Longitude
+    )
+    
+    crm %<>% mutate(
+      date = lubridate::parse_date_time(date, 'm/d/y I:M:S p'),
+      arrest = ifelse( arrest == 'true', 1, 0 ),
+      domestic = ifelse( domestic == 'true', 1, 0 )
+    )
+    
+    crm %<>% filter( domestic == 0 ) %>% select( -domestic )
+    crm %<>% filter( ! loc %in% c( 'RESIDENCE', 'APARTMENT', 'OTHER' ), date > mdy('1/1/2008') )
+    
+    
+    fin %<>% mutate(
+      date = mdy(date),
+      finid = 1:nrow(fin)
+    )
 
   save( lic, own, inspect, vet, file = fname )
 

@@ -27,6 +27,14 @@ if( length( list.files( pattern = fname ) ) > 0 ){ load(fname) } else {
   # Vet-owned business.
   vet = fread('../data/Veteran_Owned_Businesses.csv') # https://data.cityofchicago.org/Administration-Finance/Veteran-Owned-Businesses/czzw-ymcb
   
-  save( lic, own, inspect, vet, file = fname )
+  crm = fread( '../data/Crimes_-_2001_to_present.csv')# https://data.cityofchicago.org/Public-Safety/Crimes-2001-to-present/ijzp-q8t2
+  
+  # https://www.nasdaq.com/symbol/dri/historical
+  fin = bind_rows( 
+      fread( '../data/dri10yr.csv' ) %>% mutate( sym = 'DRI' ),
+      fread( '../data/xly10yr.csv' ) %>% mutate( sym = 'XLY')
+  )
+  
+  save( lic, own, inspect, vet, crm, file = fname )
 
 }
