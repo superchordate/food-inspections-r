@@ -1,8 +1,11 @@
 require(RMySQL)
 require(jsonlite)
+require(dplyr)
 
 rm(list=ls(all=TRUE))
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path)) # set directory to location of file.
+
+# conn = dbConnect( MySQL(), dbname = 'project', username = 'root', password = 'root', host = 'localhost' ) # make sure this database exists if you want to use it.
 source( '../connect.R') # this creates the connection object saved as 'conn'. You can create this separetly, I don't want to save my credentials here.
 
 crmdist = dbGetQuery( conn, 'select * from crmdist' )
@@ -22,7 +25,7 @@ lic %<>%
   
 rm(addr,acct_site_lic,acct,liccode)
 
-licnums = unique( lic$licnum ) %>% bc::smpl( 1000 )
+licnums = unique( lic$licnum ) %>% dplyr::sample_n( 1000 )
 
 save( crmdist, crm, lic, file = '../data/4-tojson-pre.RData' )
 
