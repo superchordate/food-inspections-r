@@ -4,9 +4,10 @@ load('../data/rout/2-clean.RData')
 
 require(RMySQL)
 
-source( '../connect.R') # this creates the connection object saved as 'conn'. You can create this separetly, I don't want to save my credentials here.
+conn = dbConnect( MySQL(), dbname = 'project', username = 'root', password = 'root', host = 'localhost' ) # make sure this database exists if you want to use it.
+# source( '../connect.R') # this creates the connection object saved as 'conn'. You can create this separetly, I don't want to save my credentials here.
 
-if(T) for( i in c( 'acct', 'acct_site_lic', 'addr', 'busact', 'inspect', 'inspect_viol', 'lic', 'lic_code', 'own', 'vet', 'viol' ) ){
+for( i in c( 'acct', 'acct_site_lic', 'addr', 'busact', 'inspect', 'inspect_viol', 'lic', 'lic_code', 'own', 'vet', 'viol' ) ){
   idt = eval(parse(text=i))
   dbWriteTable(
     conn,
@@ -22,8 +23,8 @@ if(T) for( i in c( 'acct', 'acct_site_lic', 'addr', 'busact', 'inspect', 'inspec
 
 dbWriteTable(
   conn,
-  name='crmdist', 
-  value = xw,
+  name='viol', 
+  value = as.data.frame( viol ),
   overwrite = TRUE,
   row.names = FALSE
 )

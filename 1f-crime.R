@@ -1,3 +1,5 @@
+require(geosphere)
+
 # distance testing.
 distHaversine( round( addr[ 1, c( 'lat', 'lng' ) ], 4 ), round( crm[ 2, c( 'lat', 'lng' ) ], 4 ) ) / 1609.34
 
@@ -9,8 +11,6 @@ crll = crm %>% select( latr4, lngr4 ) %>% unique()
 
 addrll$addrllid = 1:nrow(addrll)
 crll$crllid = 1:nrow(crll)
-
-require(geosphere)
 
 if(exists('xw')) rm(xw)
 lapply( 1:nrow(addrll), function(i){
